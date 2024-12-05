@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import sendIcon from "../assets/sendIcon.png";
 
 export default function Qabot() {
@@ -13,6 +13,7 @@ export default function Qabot() {
     id: "",
     textContent: "",
   });
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const handleContextmenu = (e: MouseEvent) => {
@@ -37,17 +38,34 @@ export default function Qabot() {
       setLastTime(currentTime);
     };
 
+    const handleFormOutsideClick = (e: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(e.target as Node)) {
+        setIsShow(false);
+      }
+    };
+
+    const handleEscKeydown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsShow(false);
+      }
+    };
+
     window.addEventListener("contextmenu", handleContextmenu);
+    window.addEventListener("click", handleFormOutsideClick);
+    window.addEventListener("keydown", handleEscKeydown);
 
     return () => {
       window.removeEventListener("contextmenu", handleContextmenu);
+      window.removeEventListener("click", handleFormOutsideClick);
+      window.removeEventListener("keydown", handleEscKeydown);
     };
   }, [lastTime]);
 
   return (
-    <div className="h-screen">
+    <>
       {isShow ? (
         <form
+          ref={formRef}
           className="absolute bg-white z-50 text-black rounded-[10px] text-[14px] p-[15px] flex flex-col border"
           style={{ left: `${position.x}px`, top: `${position.y}px` }}
         >
@@ -69,6 +87,6 @@ export default function Qabot() {
           </button>
         </form>
       ) : null}
-    </div>
+    </>
   );
 }
