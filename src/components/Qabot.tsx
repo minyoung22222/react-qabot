@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import sendIcon from "../assets/sendIcon.png";
+import { useSendSlack } from "../apiHooks/useSendSlack";
 
 export default function Qabot() {
   const [lastTime, setLastTime] = useState(0);
@@ -14,6 +15,7 @@ export default function Qabot() {
     textContent: "",
   });
   const formRef = useRef<HTMLFormElement>(null);
+  const { mutate: sendSlackMutate } = useSendSlack();
 
   useEffect(() => {
     const handleContextmenu = (e: MouseEvent) => {
@@ -41,12 +43,14 @@ export default function Qabot() {
     const handleFormOutsideClick = (e: MouseEvent) => {
       if (formRef.current && !formRef.current.contains(e.target as Node)) {
         setIsShow(false);
+        setQaMessage("");
       }
     };
 
     const handleEscKeydown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setIsShow(false);
+        setQaMessage("");
       }
     };
 
@@ -61,11 +65,24 @@ export default function Qabot() {
     };
   }, [lastTime]);
 
+  const handleSendSlack = () => {
+    sendSlackMutate(
+      {
+        qaMessage,
+        qaElementInfo,
+      },
+      {
+        onSuccess: () => setIsShow(false),
+      }
+    );
+  };
+
   return (
     <>
       {isShow ? (
         <form
           ref={formRef}
+          onSubmit={(e) => e.preventDefault()}
           className="absolute bg-white z-50 text-black rounded-[10px] text-[14px] p-[15px] flex flex-col border"
           style={{ left: `${position.x}px`, top: `${position.y}px` }}
         >
@@ -76,13 +93,7 @@ export default function Qabot() {
             onChange={(e) => setQaMessage(e.target.value)}
             className="w-[200px] h-[100px] rounded-[10px] outline-none resize-none"
           />
-          <button
-            type="button"
-            onClick={() => {
-              console.log("qaMessage, ", qaMessage, qaElementInfo);
-            }}
-            className="ml-auto"
-          >
+          <button onClick={handleSendSlack} className="ml-auto">
             <img src={sendIcon} alt="전송 아이콘" width={20} height={20} />
           </button>
         </form>
