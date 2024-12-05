@@ -1,8 +1,20 @@
+import Qabot from "./components/Qabot";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 function App() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 1,
+        throwOnError: true,
+      },
+    },
+  });
+
   return (
-    <>
-      <h1 className="text-red-400">Vite + React</h1>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <Qabot />
+    </QueryClientProvider>
   );
 }
 
