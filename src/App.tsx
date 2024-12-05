@@ -1,9 +1,7 @@
+import Qabot from "./components/Qabot";
+
 function App() {
-  return (
-    <>
-      <h1 className="text-red-400">Vite + React</h1>
-    </>
-  );
+  return <Qabot />;
 }
 
 export default App;
