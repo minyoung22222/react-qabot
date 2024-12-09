@@ -2,10 +2,11 @@
   "name": "react-qabot",
   "private": false,
   "version": "0.0.4",
+  "type": "module",
   "main": "dist/index.js",
-  "module": "dist/index.js",
   "exports": {
-    "import": "./dist/index.js"
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
   },
   "files": [
     "dist"
