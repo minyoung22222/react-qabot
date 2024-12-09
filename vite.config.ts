@@ -1,6 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,7 +11,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, "src/index.tsx"),
       name: "react-qabot",
-      fileName: (format) => `qabot.${format}.js`,
+      fileName: "index",
+      formats: ["es", "umd", "cjs"],
     },
     rollupOptions: {
       external: ["react", "react-dom"],
