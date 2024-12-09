@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import sendIcon from "../assets/sendIcon.png";
 import { useSendSlack } from "../apiHooks/useSendSlack";
+import { getBuildEnvironment } from "../utils/environment";
 
 export default function Qabot() {
   const [lastTime, setLastTime] = useState(0);
@@ -19,6 +20,10 @@ export default function Qabot() {
 
   useEffect(() => {
     const handleContextmenu = (e: MouseEvent) => {
+      if (getBuildEnvironment() === "production") {
+        return;
+      }
+
       const currentTime = Date.now();
       const diffTime = currentTime - lastTime;
 

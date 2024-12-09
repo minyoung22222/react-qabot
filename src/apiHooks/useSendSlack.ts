@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
-import { slackConfig } from "../config/slackConfig";
-import { slackAPI } from "../core/instance";
 import { ElementInfo } from "../types/qabotTypes";
+import axios from "axios";
+import { getSlackWebhookUrl } from "../utils/environment";
 
 interface PostSlackProps {
   qaMessage: string;
@@ -29,9 +29,9 @@ const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
     ]),
   };
 
-  const res = await slackAPI({
+  const res = await axios({
     method: "post",
-    url: slackConfig.webhookUrl,
+    url: getSlackWebhookUrl(),
     data: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
