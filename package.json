@@ -1,8 +1,9 @@
 {
-  "name": "my-qabot",
-  "private": true,
+  "name": "react-qabot",
+  "private": false,
   "version": "0.0.1",
   "type": "module",
+  "main": "dist/index.html",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
