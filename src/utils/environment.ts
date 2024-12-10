@@ -7,17 +7,17 @@ export const getSlackWebhookUrl = () => {
   );
 };
 
-export const getBuildEnvironment = () => {
-  if (typeof import.meta !== "undefined" && import.meta.env) {
-    return import.meta.env.MODE;
+export const getBuildEnvironment = (env: "react" | "next" | "vite") => {
+  if (env === "vite") {
+    return import.meta.env && import.meta.env.MODE;
   }
 
-  if (typeof process !== "undefined" && process.env) {
-    if (process.env.NEXT_PUBLIC_VERCEL_ENV) {
-      return process.env.NEXT_PUBLIC_VERCEL_ENV;
-    }
+  if (env === "next") {
+    return process.env && process.env.NEXT_PUBLIC_VERCEL_ENV;
+  }
 
-    return process.env.NODE_ENV;
+  if (env === "react") {
+    return process.env && process.env.NODE_ENV;
   }
 
   return "unknown";
