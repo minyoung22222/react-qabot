@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import sendIcon from "../assets/sendIcon.png";
-import { useSendSlack } from "../apiHooks/useSendSlack";
 import { getBuildEnvironment } from "../utils/environment";
+import { postSlack } from "../apiHooks/useSendSlack";
 
-export default function Qabot() {
+export default function Qabot({ env }: { env: "react" | "next" | "vite" }) {
   const [lastTime, setLastTime] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isShow, setIsShow] = useState(false);
@@ -16,11 +16,10 @@ export default function Qabot() {
     textContent: "",
   });
   const formRef = useRef<HTMLFormElement>(null);
-  const { mutate: sendSlackMutate } = useSendSlack();
 
   useEffect(() => {
     const handleContextmenu = (e: MouseEvent) => {
-      if (getBuildEnvironment() === "production") {
+      if (getBuildEnvironment(env) === "production") {
         return;
       }
 
@@ -70,16 +69,14 @@ export default function Qabot() {
     };
   }, [lastTime]);
 
-  const handleSendSlack = () => {
-    sendSlackMutate(
-      {
-        qaMessage,
-        qaElementInfo,
-      },
-      {
-        onSuccess: () => setIsShow(false),
-      }
-    );
+  const handleSendSlack = async () => {
+    try {
+      const response = await postSlack({ qaMessage, qaElementInfo });
+      console.log("Slack 메시지 전송 성공:", response);
+      setIsShow(false);
+    } catch (err) {
+      console.error("Slack 메시지 전송 실패:", err);
+    }
   };
 
   return (

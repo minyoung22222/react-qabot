@@ -1,4 +1,3 @@
-import { useMutation } from "@tanstack/react-query";
 import { ElementInfo } from "../types/qabotTypes";
 import axios from "axios";
 import { getSlackWebhookUrl } from "../utils/environment";
@@ -16,7 +15,7 @@ const createSlackBlock = (label: string, content: string) => ({
   },
 });
 
-const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
+export const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
   const payload = {
     text: "새로운 QA 발생!",
     blocks: JSON.stringify([
@@ -39,13 +38,4 @@ const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
   });
 
   return res;
-};
-
-export const useSendSlack = () => {
-  return useMutation({
-    mutationFn: postSlack,
-    onError: (err) => {
-      console.error("에러발생", err);
-    },
-  });
 };
