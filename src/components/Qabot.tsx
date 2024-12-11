@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import sendIcon from "../assets/sendIcon.png";
 import { getBuildEnvironment } from "../utils/environment";
 import { postSlack } from "../apiHooks/useSendSlack";
+import { QabotProps } from "../types/qabotTypes";
 
-export default function Qabot({ env }: { env: "react" | "next" | "vite" }) {
+export default function Qabot({ env }: QabotProps) {
   const [lastTime, setLastTime] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isShow, setIsShow] = useState(false);

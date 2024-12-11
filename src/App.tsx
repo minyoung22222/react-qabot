@@ -1,10 +1,12 @@
 import Qabot from "./components/Qabot";
+import "./styles/gloabal.css";
+import { QabotProps } from "./types/qabotTypes";
 
-function App({ env }: { env?: "react" | "next" | "vite" }) {
+function App(props: QabotProps) {
   return (
-    <>
-      <Qabot env={env || "react"} />
-    </>
+    <div className="">
+      <Qabot env={props.env ?? ""} />
+    </div>
   );
 }
 
