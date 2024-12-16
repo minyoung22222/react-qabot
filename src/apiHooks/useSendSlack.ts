@@ -1,4 +1,4 @@
-import { ElementInfo } from "../types/qabotTypes";
+import { ElementInfo } from "../types";
 import axios from "axios";
 import { getSlackWebhookUrl } from "../utils/environment";
 

@@ -1,6 +1,6 @@
 import Qabot from "./components/Qabot";
 import "./styles/gloabal.css";
-import { QabotProps } from "./types/qabotTypes";
+import { QabotProps } from "./types";
 
 function App(props: QabotProps) {
   return (

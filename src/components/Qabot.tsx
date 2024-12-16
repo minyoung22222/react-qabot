@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import sendIcon from "../assets/sendIcon.png";
 import { getBuildEnvironment } from "../utils/environment";
 import { postSlack } from "../apiHooks/useSendSlack";
-import { QabotProps } from "../types/qabotTypes";
+import { QabotProps } from "../types";
 
 export default function Qabot({ env }: QabotProps) {
   const [lastTime, setLastTime] = useState(0);
