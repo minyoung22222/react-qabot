@@ -1,7 +1,22 @@
 {
   "name": "react-qabot",
   "private": false,
-  "version": "0.0.7",
+  "version": "0.0.8",
+  "description": "A library that allows you to do QA simply and conveniently by linking only the Slack Webhook API",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "Slack",
+    "QA"
+  ],
+  "author": {
+    "name": "minyoung",
+    "email": "alsduddl9977@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/minyoung22222/my-qabot.git"
+  },
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
