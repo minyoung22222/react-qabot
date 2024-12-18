@@ -4,7 +4,7 @@ import { QabotProps } from "./types";
 
 function App(props: QabotProps) {
   return (
-    <div className="">
+    <div>
       <Qabot env={props.env ?? ""} />
     </div>
   );
