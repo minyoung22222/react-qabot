@@ -16,6 +16,8 @@ const createSlackBlock = (label: string, content: string) => ({
 });
 
 export const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
+  const today = new Date();
+
   const payload = {
     text: "새로운 QA 발생!",
     blocks: JSON.stringify([
@@ -25,6 +27,7 @@ export const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) =>
       createSlackBlock("id", qaElementInfo.id),
       createSlackBlock("className", qaElementInfo.className),
       createSlackBlock("textContent", qaElementInfo.textContent),
+      createSlackBlock("createdAt", today.toLocaleString()),
     ]),
   };
 
