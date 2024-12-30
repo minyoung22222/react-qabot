@@ -3,8 +3,10 @@ import sendIcon from "../assets/sendIcon.png";
 import { getBuildEnvironment } from "../utils/environment";
 import { postSlack } from "../apiHooks/useSendSlack";
 import { QabotProps } from "../types";
+import { useToastStore } from "../stores/toastStore";
 
 export default function Qabot({ env }: QabotProps) {
+  const { setShowToast } = useToastStore();
   const [lastTime, setLastTime] = useState(0);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isShow, setIsShow] = useState(false);
@@ -68,15 +70,17 @@ export default function Qabot({ env }: QabotProps) {
       window.removeEventListener("click", handleFormOutsideClick);
       window.removeEventListener("keydown", handleEscKeydown);
     };
-  }, [lastTime]);
+  }, [lastTime, env]);
 
   const handleSendSlack = async () => {
     try {
       const response = await postSlack({ qaMessage, qaElementInfo });
-      console.log("Slack 메시지 전송 성공:", response);
+      console.log("Slack QA 전송 성공:", response);
       setIsShow(false);
-    } catch (err) {
-      console.error("Slack 메시지 전송 실패:", err);
+      setShowToast("Slack으로 QA 전송 성공!", "success");
+    } catch (error) {
+      console.error("Slack QA 전송 실패:", error);
+      setShowToast(`Slack으로 QA 전송 실패:${error}`, "error");
     }
   };
 
