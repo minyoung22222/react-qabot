@@ -44,8 +44,8 @@ export const postSlack = async ({
   const today = new Date();
 
   const blocks = [
-    createTitleBlock(qaTitle ?? "📷 새로운 QA 발생!"),
-    createSlackBlock("QA 메시지", qaMessage),
+    createTitleBlock(qaTitle ?? "📷 A new QA has occurred!"),
+    createSlackBlock("QA message", qaMessage),
     includePathName && createSlackBlock("pathname", qaElementInfo.pathName),
     includeTagName && createSlackBlock("tagName", qaElementInfo.tagName),
     includeId && createSlackBlock("id", qaElementInfo.id),
@@ -55,7 +55,7 @@ export const postSlack = async ({
   ].filter(Boolean);
 
   const payload = {
-    text: "새로운 QA 발생!",
+    text: "A new QA has occurred!",
     blocks: JSON.stringify(blocks),
   };
 
