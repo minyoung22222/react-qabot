@@ -6,7 +6,7 @@ import { QabotProps } from "../types";
 import { useToastStore } from "../stores/toastStore";
 import { useQaModeStore } from "../stores/qaModeStore";
 
-export default function Qabot({ env }: QabotProps) {
+export default function Qabot({ env, qaTitle }: QabotProps) {
   const { setShowToast } = useToastStore();
   const { qaMode, setDeactivateQaMode } = useQaModeStore();
 
@@ -67,7 +67,7 @@ export default function Qabot({ env }: QabotProps) {
 
   const handleSendSlack = async () => {
     try {
-      const response = await postSlack({ qaMessage, qaElementInfo });
+      const response = await postSlack({ qaMessage, qaElementInfo, qaTitle });
       console.log("Slack QA 전송 성공:", response);
       setIsShow(false);
       setShowToast("Slack으로 QA 전송 성공!", "success");

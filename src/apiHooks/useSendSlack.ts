@@ -5,22 +5,32 @@ import { getSlackWebhookUrl } from "../utils/environment";
 interface PostSlackProps {
   qaMessage: string;
   qaElementInfo: ElementInfo;
+  qaTitle?: string;
 }
+
+const createTitleBlock = (title: string) => ({
+  type: "section",
+  text: {
+    type: "mrkdwn",
+    text: `*${title}*`,
+  },
+});
 
 const createSlackBlock = (label: string, content: string) => ({
   type: "section",
   text: {
     type: "mrkdwn",
-    text: `*${label}*\n ${content}`,
+    text: `*\`${label}\`* : ${content}`,
   },
 });
 
-export const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
+export const postSlack = async ({ qaMessage, qaElementInfo, qaTitle }: PostSlackProps) => {
   const today = new Date();
 
   const payload = {
     text: "새로운 QA 발생!",
     blocks: JSON.stringify([
+      createTitleBlock(qaTitle ?? "📷 새로운 QA 발생!"),
       createSlackBlock("QA 메시지", qaMessage),
       createSlackBlock("pathname", qaElementInfo.pathName),
       createSlackBlock("tagName", qaElementInfo.tagName),

@@ -1,5 +1,6 @@
 export interface QabotProps {
   env?: "react" | "next" | "vite" | "";
+  qaTitle?: string;
 }
 
 export interface ElementInfo {

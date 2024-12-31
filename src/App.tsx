@@ -13,7 +13,7 @@ function App(props: QabotProps) {
     <div>
       <Toast />
       {qaMode && <CustomCursor />}
-      <Qabot env={props.env ?? ""} />
+      <Qabot env={props.env ?? ""} qaTitle={props.qaTitle} />
       <QaButton />
     </div>
   );
