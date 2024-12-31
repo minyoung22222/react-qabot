@@ -13,7 +13,16 @@ function App(props: QabotProps) {
     <div>
       <Toast />
       {qaMode && <CustomCursor />}
-      <Qabot env={props.env ?? ""} qaTitle={props.qaTitle} />
+      <Qabot
+        env={props.env ?? ""}
+        qaTitle={props.qaTitle}
+        includePathName={props.includePathName ?? true}
+        includeTagName={props.includeTagName ?? true}
+        includeId={props.includeId ?? true}
+        includeClassName={props.includeClassName ?? true}
+        includeTextContent={props.includeTextContent ?? true}
+        includeCreatedAt={props.includeCreatedAt ?? true}
+      />
       <QaButton />
     </div>
   );

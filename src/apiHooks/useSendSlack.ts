@@ -6,6 +6,12 @@ interface PostSlackProps {
   qaMessage: string;
   qaElementInfo: ElementInfo;
   qaTitle?: string;
+  includePathName?: boolean;
+  includeTagName?: boolean;
+  includeId?: boolean;
+  includeClassName?: boolean;
+  includeTextContent?: boolean;
+  includeCreatedAt?: boolean;
 }
 
 const createTitleBlock = (title: string) => ({
@@ -24,21 +30,33 @@ const createSlackBlock = (label: string, content: string) => ({
   },
 });
 
-export const postSlack = async ({ qaMessage, qaElementInfo, qaTitle }: PostSlackProps) => {
+export const postSlack = async ({
+  qaMessage,
+  qaElementInfo,
+  qaTitle,
+  includePathName,
+  includeTagName,
+  includeId,
+  includeClassName,
+  includeTextContent,
+  includeCreatedAt,
+}: PostSlackProps) => {
   const today = new Date();
+
+  const blocks = [
+    createTitleBlock(qaTitle ?? "📷 새로운 QA 발생!"),
+    createSlackBlock("QA 메시지", qaMessage),
+    includePathName && createSlackBlock("pathname", qaElementInfo.pathName),
+    includeTagName && createSlackBlock("tagName", qaElementInfo.tagName),
+    includeId && createSlackBlock("id", qaElementInfo.id),
+    includeClassName && createSlackBlock("className", qaElementInfo.className),
+    includeTextContent && createSlackBlock("textContent", qaElementInfo.textContent),
+    includeCreatedAt && createSlackBlock("createdAt", today.toLocaleString()),
+  ].filter(Boolean);
 
   const payload = {
     text: "새로운 QA 발생!",
-    blocks: JSON.stringify([
-      createTitleBlock(qaTitle ?? "📷 새로운 QA 발생!"),
-      createSlackBlock("QA 메시지", qaMessage),
-      createSlackBlock("pathname", qaElementInfo.pathName),
-      createSlackBlock("tagName", qaElementInfo.tagName),
-      createSlackBlock("id", qaElementInfo.id),
-      createSlackBlock("className", qaElementInfo.className),
-      createSlackBlock("textContent", qaElementInfo.textContent),
-      createSlackBlock("createdAt", today.toLocaleString()),
-    ]),
+    blocks: JSON.stringify(blocks),
   };
 
   const res = await axios({
