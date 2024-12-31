@@ -4,10 +4,12 @@ import { getBuildEnvironment } from "../utils/environment";
 import { postSlack } from "../apiHooks/useSendSlack";
 import { QabotProps } from "../types";
 import { useToastStore } from "../stores/toastStore";
+import { useQaModeStore } from "../stores/qaModeStore";
 
-export default function Qabot({ env }: QabotProps) {
+export default function Qabot({ env, ...props }: QabotProps) {
   const { setShowToast } = useToastStore();
-  const [lastTime, setLastTime] = useState(0);
+  const { qaMode, setDeactivateQaMode } = useQaModeStore();
+
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isShow, setIsShow] = useState(false);
   const [qaMessage, setQaMessage] = useState("");
@@ -21,16 +23,12 @@ export default function Qabot({ env }: QabotProps) {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    const handleContextmenu = (e: MouseEvent) => {
+    const handlClick = (e: MouseEvent) => {
       if (getBuildEnvironment(env) === "production") {
         return;
       }
 
-      const currentTime = Date.now();
-      const diffTime = currentTime - lastTime;
-
-      if (diffTime < 1000) {
-        e.preventDefault();
+      if (qaMode) {
         setIsShow(true);
         setPosition({ x: e.pageX, y: e.pageY });
 
@@ -44,13 +42,10 @@ export default function Qabot({ env }: QabotProps) {
         });
       }
 
-      setLastTime(currentTime);
-    };
-
-    const handleFormOutsideClick = (e: MouseEvent) => {
       if (formRef.current && !formRef.current.contains(e.target as Node)) {
         setIsShow(false);
         setQaMessage("");
+        setDeactivateQaMode();
       }
     };
 
@@ -61,25 +56,24 @@ export default function Qabot({ env }: QabotProps) {
       }
     };
 
-    window.addEventListener("contextmenu", handleContextmenu);
-    window.addEventListener("click", handleFormOutsideClick);
+    window.addEventListener("click", handlClick);
     window.addEventListener("keydown", handleEscKeydown);
 
     return () => {
-      window.removeEventListener("contextmenu", handleContextmenu);
-      window.removeEventListener("click", handleFormOutsideClick);
+      window.removeEventListener("click", handlClick);
       window.removeEventListener("keydown", handleEscKeydown);
     };
-  }, [lastTime, env]);
+  }, [env, qaMode, setDeactivateQaMode]);
 
   const handleSendSlack = async () => {
     try {
-      const response = await postSlack({ qaMessage, qaElementInfo });
+      const response = await postSlack({ qaMessage, qaElementInfo, ...props });
       console.log("Slack QA 전송 성공:", response);
       setIsShow(false);
       setShowToast("Slack으로 QA 전송 성공!", "success");
     } catch (error) {
       console.error("Slack QA 전송 실패:", error);
+      setIsShow(false);
       setShowToast(`Slack으로 QA 전송 실패:${error}`, "error");
     }
   };
@@ -92,6 +86,7 @@ export default function Qabot({ env }: QabotProps) {
           onSubmit={(e) => e.preventDefault()}
           className="absolute bg-white z-50 text-black rounded-[10px] text-[14px] p-[15px] flex flex-col border"
           style={{ left: `${position.x}px`, top: `${position.y}px` }}
+          onClick={(e) => e.stopPropagation()}
         >
           <textarea
             name="qaTextArea"

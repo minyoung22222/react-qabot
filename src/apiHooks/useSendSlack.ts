@@ -5,30 +5,58 @@ import { getSlackWebhookUrl } from "../utils/environment";
 interface PostSlackProps {
   qaMessage: string;
   qaElementInfo: ElementInfo;
+  qaTitle?: string;
+  includePathName?: boolean;
+  includeTagName?: boolean;
+  includeId?: boolean;
+  includeClassName?: boolean;
+  includeTextContent?: boolean;
+  includeCreatedAt?: boolean;
 }
+
+const createTitleBlock = (title: string) => ({
+  type: "section",
+  text: {
+    type: "mrkdwn",
+    text: `*${title}*`,
+  },
+});
 
 const createSlackBlock = (label: string, content: string) => ({
   type: "section",
   text: {
     type: "mrkdwn",
-    text: `*${label}*\n ${content}`,
+    text: `*\`${label}\`* : ${content}`,
   },
 });
 
-export const postSlack = async ({ qaMessage, qaElementInfo }: PostSlackProps) => {
+export const postSlack = async ({
+  qaMessage,
+  qaElementInfo,
+  qaTitle,
+  includePathName,
+  includeTagName,
+  includeId,
+  includeClassName,
+  includeTextContent,
+  includeCreatedAt,
+}: PostSlackProps) => {
   const today = new Date();
 
+  const blocks = [
+    createTitleBlock(qaTitle ?? "📷 A new QA has occurred!"),
+    createSlackBlock("QA message", qaMessage),
+    includePathName && createSlackBlock("pathname", qaElementInfo.pathName),
+    includeTagName && createSlackBlock("tagName", qaElementInfo.tagName),
+    includeId && createSlackBlock("id", qaElementInfo.id),
+    includeClassName && createSlackBlock("className", qaElementInfo.className),
+    includeTextContent && createSlackBlock("textContent", qaElementInfo.textContent),
+    includeCreatedAt && createSlackBlock("createdAt", today.toLocaleString()),
+  ].filter(Boolean);
+
   const payload = {
-    text: "새로운 QA 발생!",
-    blocks: JSON.stringify([
-      createSlackBlock("QA 메시지", qaMessage),
-      createSlackBlock("pathname", qaElementInfo.pathName),
-      createSlackBlock("tagName", qaElementInfo.tagName),
-      createSlackBlock("id", qaElementInfo.id),
-      createSlackBlock("className", qaElementInfo.className),
-      createSlackBlock("textContent", qaElementInfo.textContent),
-      createSlackBlock("createdAt", today.toLocaleString()),
-    ]),
+    text: "A new QA has occurred!",
+    blocks: JSON.stringify(blocks),
   };
 
   const res = await axios({

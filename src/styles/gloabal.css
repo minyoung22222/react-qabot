@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .speech-bubble {
+    height: 40px;
+    width: 45px;
+    position: relative;
+    background: #c573ff;
+    border-radius: 50%;
+  }
+
+  .speech-bubble:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 17px solid transparent;
+    border-top-color: #c573ff;
+    border-bottom: 0;
+    border-left: 0;
+    margin-left: -15px;
+    margin-bottom: -9px;
+    transform: rotate(26deg);
+  }
+  #custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background-color: #c573ff;
+    border: 2px solid white;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
+}
