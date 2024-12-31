@@ -26,4 +26,15 @@
     margin-bottom: -9px;
     transform: rotate(26deg);
   }
+  #custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background-color: #c573ff;
+    border: 2px solid white;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+  }
 }
