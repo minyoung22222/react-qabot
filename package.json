@@ -6,8 +6,11 @@
   "license": "MIT",
   "keywords": [
     "react",
-    "Slack",
-    "QA"
+    "slack",
+    "QA",
+    "slackbot",
+    "nextjs",
+    "vite"
   ],
   "author": {
     "name": "minyoung",
